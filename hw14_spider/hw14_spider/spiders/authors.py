@@ -10,6 +10,7 @@ class AuthorsSpider(scrapy.Spider):
         for quote in response.xpath("/html//div[@class='quote']"):
             yield {
                 "keywords": quote.xpath("div[@class='tags']/a/text()").extract(),
+                "description": quote.xpath("span/a/text()").get(),
                 "author": quote.xpath("span/small/text()").extract(),
                 "quote": quote.xpath("span[@class='text']/text()").get()
             }
