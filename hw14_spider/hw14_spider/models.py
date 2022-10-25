@@ -6,38 +6,34 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 many_to_many = Table(
-    'many_to_many',
+    "many_to_many",
     Base.metadata,
-    Column('keywords_id', Integer, ForeignKey('keywords.id')),
-    Column('quotes_id', Integer, ForeignKey('quotes.id'))
+    Column("keywords_id", Integer, ForeignKey("keywords.id")),
+    Column("quotes_id", Integer, ForeignKey("quotes.id")),
 )
 
 
 class Person(Base):
-    __tablename__ = 'persons'
+    __tablename__ = "person"
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    author_name = Column(String(50), nullable=True)
-    born_date = Column(String(50), nullable=True)
-    born_location = Column(String(50), nullable=True)
-    description = Column(String(50), nullable=True)
+    author_name = Column(String(50), nullable=False)
+    birthday_and_place_of_born = Column(String(50), nullable=True)
+    author_url = Column(String(50), nullable=True)
 
 
 class Keywords(Base):
-    __tablename__ = 'keywords'
+    __tablename__ = "keywords"
     id = Column(Integer, primary_key=True)
     keyword = Column(String(50))
 
 
 class Quotes(Base):
-    __tablename__ = 'quotes'
+    __tablename__ = "quotes"
     id = Column(Integer, primary_key=True)
     quote = Column(String(50))
-    author = Column(String(50))
-    keywords = relationship('Keywords', secondary=many_to_many, backref='keywords')
+    author_id = Column(Integer, ForeignKey('person.id', ondelete="CASCADE"))
+    keywords = relationship("Keywords", secondary=many_to_many, backref="keywords")
 
 
-engine = create_engine('sqlite:///hw14.db', connect_args={'check_same_thread': False})
+engine = create_engine('sqlite:///database.db.sqlite3', connect_args={'check_same_thread': False})
 Base.metadata.create_all(engine)
-
-
